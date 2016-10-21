@@ -63,6 +63,11 @@ final class Main {
 		$this->real_error_handler = set_error_handler( function( $type, $message, $file, $line ) use( $self ) {
 
 			if( in_array( $type, $self->error_types ) ) {
+
+				if( ! is_string( $message ) ) {
+					$message = print_r( $message, true );
+				}
+
 				$self->errors[] = sprintf(
 					"%s:%d\n\n%s",
 					$file,
