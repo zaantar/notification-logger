@@ -112,5 +112,3 @@ final class Main {
 
 
 Main::initialize();
-
-echo $x['a'];
