@@ -25,32 +25,50 @@ final class Main {
 
 	public function __construct() {
 
-		$self = $this;
-
-		add_action( 'admin_enqueue_scripts', function() use( $self ) {
-			wp_register_script( 'notification-logger', plugin_dir_url( __FILE__ ) . 'notification-logger.min.js' );
-			wp_register_script( 'notification-logger-bootstrap', plugin_dir_url( __FILE__ ) . 'bootstrap.js', array( 'notification-logger' ) );
-
-			wp_enqueue_script( 'notification-logger-bootstrap' );
-
-			$self->localize_script();
-		});
+		$this->enqueue_scripts();
 
 		$this->set_error_handler();
+
 	}
 
 
 	private $errors = array();
 
 
-	private $real_error_handler;
+	private $previous_error_handler;
 
 
 	private $error_types = array(
-		E_WARNING, E_USER_WARNING, E_NOTICE, E_USER_NOTICE
+		E_WARNING => 'E_WARNING',
+		E_USER_WARNING => 'E_USER_WARNING',
+		E_NOTICE => 'E_NOTICE',
+		E_USER_NOTICE => 'E_USER_NOTICE'
 	);
 
 
+	private function enqueue_scripts() {
+
+		$self = $this;
+
+		$enqueue_scripts = function() use( $self ) {
+			wp_register_script( 'notification-logger', plugin_dir_url( __FILE__ ) . 'notification-logger.min.js' );
+			wp_register_script( 'notification-logger-bootstrap', plugin_dir_url( __FILE__ ) . 'bootstrap.js', array( 'notification-logger' ) );
+
+			wp_enqueue_script( 'notification-logger-bootstrap' );
+
+			$self->localize_script();
+		};
+
+		add_action( 'admin_enqueue_scripts', $enqueue_scripts );
+		add_action( 'wp_enqueue_scripts', $enqueue_scripts );
+	}
+
+
+	/**
+	 * Pass errors to JS.
+	 *
+	 * We don't mind running this repeatedly because the last l10n object overwrites the previous one.
+	 */
 	private function localize_script() {
 		wp_localize_script( 'notification-logger-bootstrap', 'NotificationLoggerPHPErrors', array( 'errors' => $this->errors ) );
 	}
@@ -60,27 +78,30 @@ final class Main {
 
 		$self = $this;
 
-		$this->real_error_handler = set_error_handler( function( $type, $message, $file, $line ) use( $self ) {
+		$this->previous_error_handler = set_error_handler( function( $type, $message, $file, $line ) use( $self ) {
 
-			if( in_array( $type, $self->error_types ) ) {
+			if( array_key_exists( $type, $self->error_types ) ) {
 
 				if( ! is_string( $message ) ) {
 					$message = print_r( $message, true );
 				}
 
-				$self->errors[] = sprintf(
-					"%s:%d\n\n%s",
-					$file,
-					$line,
-					$message
-					//wp_debug_backtrace_summary( __CLASS__ )
+				// Store the error information
+				$self->errors[] = array(
+					'type' => $self->error_types[ $type ],
+					'message' => sprintf(
+						"%s:%d\n\n%s",
+						$file,
+						$line,
+						$message
+					)
 				);
 			}
 
 			$self->localize_script();
 
-			if ( null != $self->real_error_handler ) {
-				return call_user_func( $self->real_error_handler, $type, $message, $file, $line );
+			if ( null != $self->previous_error_handler ) {
+				return call_user_func( $self->previous_error_handler, $type, $message, $file, $line );
 			} else {
 				return false;
 			}
@@ -91,3 +112,5 @@ final class Main {
 
 
 Main::initialize();
+
+echo $x['a'];

@@ -2,13 +2,19 @@
 
 logger.init();
 
+/**
+ * Show PHP errors and warnings if there are any.
+ */
 jQuery(document).ready(function() {
-    if(typeof( NotificationLoggerPHPErrors ) == 'undefined') {
+
+    //noinspection JSUnresolvedVariable
+    if(typeof(NotificationLoggerPHPErrors) == 'undefined') {
         return;
     }
 
-    jQuery.each(NotificationLoggerPHPErrors.errors, function(index, errorMessage) {
-        logger.log(errorMessage, 'PHP Error');
+    //noinspection JSUnresolvedVariable
+    jQuery.each(NotificationLoggerPHPErrors.errors, function(index, error) {
+        logger.log(error.message, 'PHP ' + error.type);
     });
 
 });
