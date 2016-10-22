@@ -20,7 +20,7 @@ This plugin is obviously intended only for development sites. **Never use it in 
 
 ## Installing
  - Clone or download the plugin into the `wp-content/plugins` directory in your site
-   - `git clone https://github.com/hkirat/notification-logger.git`
+   - `git clone https://github.com/zaantar/notification-logger.git`
  - Activate the plugin.
    - `wp plugin activate notification-logger`
  - As long as it remains active, notifications will be displayed.
