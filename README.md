@@ -3,17 +3,16 @@
 This is a WordPress plugin. For the standalone notification-logger, please go [here](https://github.com/hkirat/notification-logger).
  
 Ever wondered why you have to open the console every time you want to want to log a variable?
-
 Notification Logger helps provide desktop notification for your console messages.
 
 During development, You have to check the browser's inspector periodically to see what your console.log()'s are saying.
+With this plugin, you can develop and debug WordPress sites, themes and plugins and see console messages as Desktop Notifications.
 
-With [notification-logger](https://hkirat.github.io/notification-logger/), you can develop and debug web apps and see console messages as Desktop Notifications.
+It also catches PHP warnings and errors and displays notifications for them as soon as the page loads (unless the error breaks the site entirely).
 
-And it only adds ~50 lines to your project.
+[Original demo](https://hkirat.github.io/notification-logger/)
 
-[Demo](https://hkirat.github.io/notification-logger/)
-
+This plugin is obviously intended only for development sites. **Never use it in a production environment.**
 
 ## Screenshot
 
