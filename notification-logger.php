@@ -52,7 +52,11 @@ final class Main {
 
 		$enqueue_scripts = function() use( $self ) {
 			wp_register_script( 'notification-logger', plugin_dir_url( __FILE__ ) . 'notification-logger.min.js' );
-			wp_register_script( 'notification-logger-bootstrap', plugin_dir_url( __FILE__ ) . 'bootstrap.js', array( 'notification-logger' ) );
+			wp_register_script(
+				'notification-logger-bootstrap',
+				plugin_dir_url( __FILE__ ) . 'bootstrap.js',
+				array( 'notification-logger', 'jquery' )
+			);
 
 			wp_enqueue_script( 'notification-logger-bootstrap' );
 
