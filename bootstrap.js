@@ -12,9 +12,16 @@ jQuery(document).ready(function() {
         return;
     }
 
+
+    const errorsToShow = 3;
     //noinspection JSUnresolvedVariable
-    jQuery.each(NotificationLoggerPHPErrors.errors, function(index, error) {
+    var errors = NotificationLoggerPHPErrors.errors;
+    jQuery.each(errors.slice(0, errorsToShow), function(index, error) {
         logger.log(error.message, 'PHP ' + error.type);
     });
+
+    if(errors.length > errorsToShow) {
+        logger.log("There are " + errors.length - errorsToShow + " more PHP errors or warnings. Check your debug.log for details", 'Too many PHP errors');
+    }
 
 });
